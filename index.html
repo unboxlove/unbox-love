@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -18,9 +19,13 @@
     <a href="index.html">Home</a>
     <a href="#products">Products</a>
     <a href="#about">About</a>
-    <button id="cartBtn" class="cart-btn">
-      🛒 Cart <span id="cartCount">0</span>
-    </button>
+
+```
+<button id="cartBtn" class="cart-btn">
+  🛒 Cart <span id="cartCount">0</span>
+</button>
+```
+
   </nav>
 </header>
 
@@ -28,103 +33,57 @@
 
   <section class="hero">
     <p class="eyebrow">HANDMADE • HEARTFELT • UNIQUE</p>
-    <h1>Little things,<br>made with love.</h1>
-    <p>
-      Thoughtful gifts, beautiful resin art and handmade
-      creations made specially for your special moments.
-    </p>
-    <a href="#products" class="hero-btn">Shop Now</a>
+
+```
+<h1>Little things,<br>made with love.</h1>
+
+<p>
+  Thoughtful gifts, beautiful resin art and handmade
+  creations made specially for your special moments.
+</p>
+
+<a href="#products" class="hero-btn">Shop Now</a>
+```
+
   </section>
 
   <section id="products" class="section">
-    <div class="section-head">
-      <p class="eyebrow">OUR COLLECTION</p>
-      <h2>Made for every moment</h2>
-    </div>
 
-    <div class="filters">
-      <button class="filter active" data-cat="All">All</button>
-      <button class="filter" data-cat="Keychains">Keychains</button>
-      <button class="filter" data-cat="Gift Hampers">Gift Hampers</button>
-      <button class="filter" data-cat="Resin Art">Resin Art</button>
-      <button class="filter" data-cat="Ribbon Bouquets">Ribbon Bouquets</button>
-    </div>
+```
+<div class="section-head">
+  <p class="eyebrow">OUR COLLECTION</p>
+  <h2>Made for every moment</h2>
+</div>
 
-    <div id="productGrid" class="product-grid"></div>
+<div class="filters">
+  <button class="filter active" data-cat="All">All</button>
+  <button class="filter" data-cat="Keychains">Keychains</button>
+  <button class="filter" data-cat="Gift Hampers">Gift Hampers</button>
+  <button class="filter" data-cat="Resin Art">Resin Art</button>
+  <button class="filter" data-cat="Ribbon Bouquets">Ribbon Bouquets</button>
+</div>
+
+<div id="productGrid" class="product-grid"></div>
+```
+
   </section>
 
   <section id="about" class="about">
-    <p class="eyebrow">ABOUT US</p>
-    <h2>Made with love, packed with care.</h2>
-    <p>
-      Every Unbox Love creation is handmade with care,
-      because your special moments deserve something special.
-    </p>
+
+```
+<p class="eyebrow">ABOUT US</p>
+
+<h2>Made with love, packed with care.</h2>
+
+<p>
+  Every Unbox Love creation is handmade with care,
+  because your special moments deserve something special.
+</p>
+```
+
   </section>
 
 </main>
-
-<!-- CART -->
-<div id="cartOverlay" class="overlay">
-  <div class="cart-box">
-
-    <button id="closeCart" class="close-btn">✕</button>
-
-    <h2>Your Cart 🛍️</h2>
-
-    <div id="cartItems"></div>
-
-    <div class="cart-total">
-      <strong>Total</strong>
-      <strong>₹<span id="cartTotal">0</span></strong>
-    </div>
-
-    <button id="checkoutBtn" class="checkout-btn">
-      Proceed to Checkout
-    </button>
-
-  </div>
-</div>
-
-<!-- CHECKOUT -->
-<div id="checkoutOverlay" class="overlay">
-  <div class="checkout-box">
-
-    <button id="closeCheckout" class="close-btn">✕</button>
-
-    <h2>Place Your Order 💕</h2>
-
-    <form id="orderForm">
-
-      <label>Your Name</label>
-      <input id="customerName" type="text" required>
-
-      <label>Phone Number</label>
-      <input id="customerPhone" type="tel" required>
-
-      <label>Delivery Address</label>
-      <textarea id="customerAddress" required></textarea>
-
-      <label>Payment Method</label>
-
-      <label class="payment-option">
-        <input type="radio" name="payment" value="COD" checked>
-        🏠 Cash on Delivery
-      </label>
-
-      <label class="payment-option">
-        <input type="radio" name="payment" value="WHATSAPP">
-        💬 WhatsApp Payment
-      </label>
-
-      <button type="submit" class="place-order-btn">
-        Place Order
-      </button>
-
-    </form>
-
-  </div>
-</div>
 
 <footer>
   © 2026 Unbox Love • Handmade with ❤️
