@@ -1,12 +1,8 @@
-# Unbox Love Website
+UNBOX LOVE PREMIUM WEBSITE
+Upload index.html, style.css, app.js and admin.html to your GitHub repository.
 
-## Admin
-Open `/admin.html`
-Demo login:
-- Username: admin
-- Password: unboxlove
-
-## Important
-This starter stores products in the browser's localStorage. That means product changes are saved on the device/browser where you make them; they are NOT shared across all customers.
-
-For a real multi-device admin system, connect this frontend to a backend/database (e.g. Supabase/Firebase) and add secure authentication before accepting real orders.
+IMPORTANT:
+- Replace the WhatsApp number in Admin > WhatsApp number.
+- Product images are not embedded yet; the visual placeholders can later be replaced with your actual bouquet/resin/hamper photos.
+- The current admin uses browser localStorage. A true multi-device admin/database needs a backend (e.g. Supabase/Firebase) in a later step.
+- COD is intentionally not included. Orders go to WhatsApp and you manually send the payment QR.
