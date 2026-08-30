@@ -37,7 +37,7 @@ const defaults = [
    =========================
    Keep your existing WhatsApp number here.
 */
-const WHATSAPP_NUMBER = " 919043094724";
+const WHATSAPP_NUMBER = "919043094724";
 
 
 /* =========================
