@@ -34,9 +34,8 @@ const defaults = [
 
 /* =========================
    YOUR WHATSAPP NUMBER
-   =========================
-   Keep your existing WhatsApp number here.
-*/
+   ========================= */
+
 const WHATSAPP_NUMBER = "919043094724";
 
 
@@ -45,15 +44,10 @@ const WHATSAPP_NUMBER = "919043094724";
    ========================= */
 
 function getProducts() {
-  let p = JSON.parse(localStorage.getItem(KEY));
-
-  if (!Array.isArray(p) || p.length === 0) {
-    p = defaults;
-    localStorage.setItem(KEY, JSON.stringify(p));
-  }
-
-  return p;
+  localStorage.setItem(KEY, JSON.stringify(defaults));
+  return defaults;
 }
+
 function money(n) {
   return "₹" + Number(n).toLocaleString("en-IN");
 }
@@ -91,6 +85,8 @@ function updateCartCount() {
 function addToCart(index) {
   const products = getProducts();
   const product = products[index];
+
+  if (!product) return;
 
   const existing = cart.find(
     item => item.name === product.name
@@ -159,7 +155,8 @@ function renderCart() {
     </div>
   `).join("");
 
-  total.textContent = Number(cartTotal()).toLocaleString("en-IN");
+  total.textContent =
+    Number(cartTotal()).toLocaleString("en-IN");
 }
 
 
@@ -269,7 +266,8 @@ function filters() {
 function openCart() {
   renderCart();
 
-  const overlay = document.getElementById("cartOverlay");
+  const overlay =
+    document.getElementById("cartOverlay");
 
   if (overlay) {
     overlay.style.display = "flex";
@@ -277,7 +275,8 @@ function openCart() {
 }
 
 function closeCart() {
-  const overlay = document.getElementById("cartOverlay");
+  const overlay =
+    document.getElementById("cartOverlay");
 
   if (overlay) {
     overlay.style.display = "none";
