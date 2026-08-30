@@ -1,432 +1,535 @@
+```javascript
 const KEY = "unboxlove_products";
 
 let editing = -1;
 
-const defaults = [
-{
-name: "Love Resin Keychain",
-price: 299,
-cat: "Keychains",
-desc: "A cute personalised resin keychain.",
-image: ""
-},
-{
-name: "Mini Gift Hamper",
-price: 799,
-cat: "Gift Hampers",
-desc: "A sweet little hamper for someone special.",
-image: ""
-},
-{
-name: "Resin Name Art",
-price: 699,
-cat: "Resin Art",
-desc: "Handmade resin art with a personalised touch.",
-image: ""
-},
-{
-name: "Ribbon Love Bouquet",
-price: 599,
-cat: "Ribbon Bouquets",
-desc: "A forever bouquet made with beautiful ribbons.",
-image: ""
-}
-];
 
 /* =========================
-GET PRODUCTS
-========================= */
+   DEFAULT PRODUCTS
+   ========================= */
+
+const defaults = [
+  {
+    name: "Love Resin Keychain",
+    price: 299,
+    cat: "Keychains",
+    desc: "A cute personalised resin keychain.",
+    image: ""
+  },
+  {
+    name: "Mini Gift Hamper",
+    price: 799,
+    cat: "Gift Hampers",
+    desc: "A sweet little hamper for someone special.",
+    image: ""
+  },
+  {
+    name: "Resin Name Art",
+    price: 699,
+    cat: "Resin Art",
+    desc: "Handmade resin art with a personalised touch.",
+    image: ""
+  },
+  {
+    name: "Ribbon Love Bouquet",
+    price: 599,
+    cat: "Ribbon Bouquets",
+    desc: "A forever bouquet made with beautiful ribbons.",
+    image: ""
+  }
+];
+
+
+/* =========================
+   GET PRODUCTS
+   ========================= */
 
 function get() {
 
-let saved =
-localStorage.getItem(KEY);
+  let saved = localStorage.getItem(KEY);
 
-if (saved) {
+  if (saved) {
 
-```
-try {
+    try {
 
-  const products =
-    JSON.parse(saved);
+      const products = JSON.parse(saved);
 
-  if (
-    Array.isArray(products) &&
-    products.length > 0
-  ) {
-    return products;
+      if (Array.isArray(products)) {
+        return products;
+      }
+
+    } catch (error) {
+
+      console.log("Product data error:", error);
+
+    }
+
   }
 
-} catch (error) {
+  save(defaults);
 
-  console.log(
-    "Product data error:",
-    error
-  );
-
-}
-```
-
+  return defaults;
 }
 
-localStorage.setItem(
-KEY,
-JSON.stringify(defaults)
-);
-
-return defaults;
-}
 
 /* =========================
-SAVE PRODUCTS
-========================= */
+   SAVE PRODUCTS
+   ========================= */
 
 function save(products) {
 
-localStorage.setItem(
-KEY,
-JSON.stringify(products)
-);
+  localStorage.setItem(
+    KEY,
+    JSON.stringify(products)
+  );
 
 }
 
+
 /* =========================
-LOGIN
-========================= */
+   LOGIN
+   ========================= */
 
 function login() {
 
-const username =
-document.querySelector("#user").value.trim();
+  const username =
+    document.querySelector("#user").value.trim();
 
-const password =
-document.querySelector("#pass").value;
+  const password =
+    document.querySelector("#pass").value;
 
-if (
-username === "admin" &&
-password === "unboxlove"
-) {
+  if (
+    username === "admin" &&
+    password === "unboxlove"
+  ) {
 
-```
-sessionStorage.admin = "1";
+    sessionStorage.setItem(
+      "admin",
+      "1"
+    );
 
-show();
-```
-
-} else {
-
-```
-document.querySelector(
-  "#loginMsg"
-).textContent =
-  "Wrong username or password.";
-```
-
-}
-
-}
-
-/* =========================
-LOGOUT
-========================= */
-
-function logout() {
-
-sessionStorage.removeItem("admin");
-
-location.reload();
-
-}
-
-/* =========================
-SHOW DASHBOARD
-========================= */
-
-function show() {
-
-document
-.querySelector("#loginBox")
-.classList.add("hidden");
-
-document
-.querySelector("#dashboard")
-.classList.remove("hidden");
-
-render();
-
-}
-
-/* =========================
-ESCAPE TEXT
-========================= */
-
-function esc(value) {
-
-return String(value ?? "")
-.replaceAll("&", "&")
-.replaceAll("<", "<")
-.replaceAll(">", ">")
-.replaceAll('"', """);
-
-}
-
-/* =========================
-RENDER PRODUCTS
-========================= */
-
-function render() {
-
-const products = get();
-
-const grid =
-document.querySelector("#adminGrid");
-
-if (!grid) return;
-
-grid.innerHTML =
-products.map(
-(product, index) => `
-
-```
-    <div class="admin-card">
-
-      <div
-        class="pic"
-        ${
-          product.image
-            ? `style="background-image:url('${String(product.image).replaceAll("'", "%27")}')"`
-            : ""
-        }
-      >
-        ${
-          product.image
-            ? ""
-            : "🎁"
-        }
-      </div>
-
-      <h3>
-        ${esc(product.name)}
-      </h3>
-
-      <small>
-        ${esc(product.cat)}
-        ·
-        ₹${Number(product.price).toLocaleString("en-IN")}
-      </small>
-
-      <p>
-        ${esc(product.desc)}
-      </p>
-
-      <div class="actions">
-
-        <button
-          class="edit"
-          onclick="edit(${index})"
-        >
-          Edit
-        </button>
-
-        <button
-          class="delete"
-          onclick="del(${index})"
-        >
-          Delete
-        </button>
-
-      </div>
-
-    </div>
-
-  `
-).join("");
-```
-
-}
-
-/* =========================
-ADD / EDIT PRODUCT
-========================= */
-
-document
-.querySelector("#productForm")
-?.addEventListener(
-"submit",
-function(event) {
-
-```
-  event.preventDefault();
-
-  const products = get();
-
-  const item = {
-
-    name:
-      document
-        .querySelector("#pname")
-        .value
-        .trim(),
-
-    price:
-      Number(
-        document
-          .querySelector("#pprice")
-          .value
-      ),
-
-    cat:
-      document
-        .querySelector("#pcat")
-        .value,
-
-    desc:
-      document
-        .querySelector("#pdesc")
-        .value
-        .trim(),
-
-    image:
-      document
-        .querySelector("#pimage")
-        .value
-        .trim()
-
-  };
-
-
-  if (!item.name) {
-    alert("Please enter product name.");
-    return;
-  }
-
-  if (editing < 0) {
-
-    products.push(item);
+    show();
 
   } else {
 
-    products[editing] = item;
+    document.querySelector(
+      "#loginMsg"
+    ).textContent =
+      "Wrong username or password.";
 
   }
 
+}
 
-  save(products);
 
-  resetForm();
+/* =========================
+   LOGOUT
+   ========================= */
+
+function logout() {
+
+  sessionStorage.removeItem("admin");
+
+  location.reload();
+
+}
+
+
+/* =========================
+   SHOW DASHBOARD
+   ========================= */
+
+function show() {
+
+  document
+    .querySelector("#loginBox")
+    .classList.add("hidden");
+
+  document
+    .querySelector("#dashboard")
+    .classList.remove("hidden");
 
   render();
 
 }
-```
 
-);
 
 /* =========================
-EDIT
-========================= */
+   ESCAPE TEXT
+   ========================= */
+
+function esc(value) {
+
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================
+   RENDER PRODUCTS
+   ========================= */
+
+function render() {
+
+  const products = get();
+
+  const grid =
+    document.querySelector("#adminGrid");
+
+  if (!grid) return;
+
+
+  if (products.length === 0) {
+
+    grid.innerHTML = `
+      <div class="empty">
+        No products added yet.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  grid.innerHTML = products.map(
+    (product, index) => `
+
+      <div class="admin-card">
+
+        <div
+          class="pic"
+          ${
+            product.image
+              ? `style="background-image:url('${String(
+                  product.image
+                ).replaceAll("'", "%27")}')"`
+              : ""
+          }
+        >
+          ${
+            product.image
+              ? ""
+              : "🎁"
+          }
+        </div>
+
+
+        <h3>
+          ${esc(product.name)}
+        </h3>
+
+
+        <small>
+          ${esc(product.cat)}
+          ·
+          ₹${Number(product.price).toLocaleString("en-IN")}
+        </small>
+
+
+        <p>
+          ${esc(product.desc)}
+        </p>
+
+
+        <div class="actions">
+
+          <button
+            class="edit"
+            onclick="edit(${index})"
+          >
+            Edit
+          </button>
+
+
+          <button
+            class="delete"
+            onclick="del(${index})"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    `
+  ).join("");
+
+}
+
+
+/* =========================
+   ADD / UPDATE PRODUCT
+   ========================= */
+
+document
+  .querySelector("#productForm")
+  ?.addEventListener(
+    "submit",
+    function (event) {
+
+      event.preventDefault();
+
+
+      const name =
+        document
+          .querySelector("#pname")
+          .value
+          .trim();
+
+
+      const price =
+        Number(
+          document
+            .querySelector("#pprice")
+            .value
+        );
+
+
+      const category =
+        document
+          .querySelector("#pcat")
+          .value;
+
+
+      const description =
+        document
+          .querySelector("#pdesc")
+          .value
+          .trim();
+
+
+      const image =
+        document
+          .querySelector("#pimage")
+          .value
+          .trim();
+
+
+      if (!name || price < 0) {
+
+        alert(
+          "Please enter product name and price."
+        );
+
+        return;
+
+      }
+
+
+      const product = {
+
+        name: name,
+
+        price: price,
+
+        cat: category,
+
+        desc: description,
+
+        image: image
+
+      };
+
+
+      const products = get();
+
+
+      /* ADD NEW PRODUCT */
+
+      if (editing === -1) {
+
+        products.push(product);
+
+        alert(
+          "Product added successfully ❤️"
+        );
+
+      }
+
+
+      /* UPDATE PRODUCT */
+
+      else {
+
+        products[editing] = product;
+
+        alert(
+          "Product updated successfully ❤️"
+        );
+
+      }
+
+
+      save(products);
+
+      resetForm();
+
+      render();
+
+    }
+  );
+
+
+/* =========================
+   EDIT PRODUCT
+   ========================= */
 
 function edit(index) {
 
-const products = get();
+  const products = get();
 
-const product = products[index];
+  const product = products[index];
 
-if (!product) return;
+  if (!product) return;
 
-editing = index;
 
-document.querySelector("#pname").value =
-product.name;
+  editing = index;
 
-document.querySelector("#pprice").value =
-product.price;
 
-document.querySelector("#pcat").value =
-product.cat;
+  document.querySelector(
+    "#pname"
+  ).value =
+    product.name;
 
-document.querySelector("#pdesc").value =
-product.desc || "";
 
-document.querySelector("#pimage").value =
-product.image || "";
+  document.querySelector(
+    "#pprice"
+  ).value =
+    product.price;
 
-document.querySelector("#formTitle").textContent =
-"Edit Product";
 
-window.scrollTo({
-top: 0,
-behavior: "smooth"
-});
+  document.querySelector(
+    "#pcat"
+  ).value =
+    product.cat;
+
+
+  document.querySelector(
+    "#pdesc"
+  ).value =
+    product.desc || "";
+
+
+  document.querySelector(
+    "#pimage"
+  ).value =
+    product.image || "";
+
+
+  document.querySelector(
+    "#formTitle"
+  ).textContent =
+    "Edit Product";
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 
 }
 
+
 /* =========================
-DELETE
-========================= */
+   DELETE PRODUCT
+   ========================= */
 
 function del(index) {
 
-if (
-!confirm("Delete this product?")
-) {
-return;
-}
+  const products = get();
 
-const products = get();
+  const product = products[index];
 
-products.splice(index, 1);
+  if (!product) return;
 
-/*
-If every product is deleted,
-restore the original 4 products.
-*/
 
-if (products.length === 0) {
+  const confirmDelete =
+    confirm(
+      `Delete "${product.name}"?`
+    );
 
-```
-save(defaults);
-```
 
-} else {
+  if (!confirmDelete) {
+    return;
+  }
 
-```
-save(products);
-```
 
-}
+  products.splice(index, 1);
 
-render();
+  save(products);
+
+  render();
+
+
+  alert(
+    "Product deleted."
+  );
 
 }
+
 
 /* =========================
-RESET FORM
-========================= */
+   CLEAR FORM
+   ========================= */
 
 function resetForm() {
 
-editing = -1;
+  editing = -1;
 
-document
-.querySelector("#productForm")
-.reset();
 
-document
-.querySelector("#formTitle")
-.textContent =
-"Add Product";
+  document
+    .querySelector("#productForm")
+    ?.reset();
+
+
+  const title =
+    document.querySelector("#formTitle");
+
+
+  if (title) {
+
+    title.textContent =
+      "Add Product";
+
+  }
 
 }
+
 
 /* =========================
-AUTO LOGIN
-========================= */
+   ENTER KEY LOGIN
+   ========================= */
+
+document
+  .querySelector("#pass")
+  ?.addEventListener(
+    "keydown",
+    function (event) {
+
+      if (event.key === "Enter") {
+        login();
+      }
+
+    }
+  );
+
+
+/* =========================
+   CHECK ADMIN LOGIN
+   ========================= */
 
 if (
-sessionStorage.admin === "1"
+  sessionStorage.getItem("admin") === "1"
 ) {
 
-show();
+  show();
 
 }
+```
