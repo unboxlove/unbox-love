@@ -54,7 +54,6 @@ function getProducts() {
 
   return p;
 }
-
 function money(n) {
   return "₹" + Number(n).toLocaleString("en-IN");
 }
