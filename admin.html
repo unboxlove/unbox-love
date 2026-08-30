@@ -1,3 +1,610 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unbox Love — Admin</title><link rel="stylesheet" href="style.css"></head><body><header><a class="brand" href="index.html">UNBOX <i>LOVE</i></a><nav><a href="index.html">← View Store</a></nav></header><main style="max-width:900px;margin:auto;padding:70px 6%"><span class="label">STORE MANAGEMENT</span><h1 style="font:600 48px 'Playfair Display'">Admin Panel</h1><p style="color:#796669">Add and manage products for your store.</p><section style="background:#fff;border:1px solid #eadbd7;border-radius:20px;padding:25px;margin:30px 0"><h2 style="font-family:'Playfair Display'">WhatsApp number</h2><p style="font-size:12px;color:#806d70">Use country code + number without + or spaces. Example: 919876543210</p><input id="wa" placeholder="919876543210" style="padding:13px;width:100%;max-width:450px;border:1px solid #d9c9c2;border-radius:10px"><button class="primary" onclick="saveWa()">Save number</button></section><section style="background:#fff;border:1px solid #eadbd7;border-radius:20px;padding:25px"><h2 style="font-family:'Playfair Display'">Add new product</h2><div style="display:grid;gap:10px;max-width:600px"><input id="name" placeholder="Product name" style="padding:13px"><select id="cat" style="padding:13px"><option>Ribbon Bouquet</option><option>Handmade Gifts</option><option>Resin Art</option><option>Gift Hamper</option></select><input id="price" type="number" placeholder="Price ₹" style="padding:13px"><input id="emoji" placeholder="Emoji e.g. 💐 (replace later with product photo)" style="padding:13px"><input id="desc" placeholder="Short description" style="padding:13px"><button class="primary" onclick="addProduct()">Add product</button></div><h2 style="font-family:'Playfair Display';margin-top:40px">Current products</h2><div id="list"></div></section></main><script>
-let ps=JSON.parse(localStorage.getItem('ul_products'))||[],w=localStorage.getItem('ul_whatsapp')||'919999999999';document.getElementById('wa').value=w;function saveWa(){localStorage.setItem('ul_whatsapp',document.getElementById('wa').value.replace(/\D/g,''));alert('WhatsApp number saved ❤️')}function addProduct(){let p={id:Date.now(),name:name.value,cat:cat.value,price:Number(price.value),emoji:emoji.value||'🎁',desc:desc.value};if(!p.name||!p.price)return alert('Enter product name and price');ps.push(p);localStorage.setItem('ul_products',JSON.stringify(ps));['name','price','emoji','desc'].forEach(id=>document.getElementById(id).value='');render()}function del(id){ps=ps.filter(p=>p.id!==id);localStorage.setItem('ul_products',JSON.stringify(ps));render()}function render(){list.innerHTML=ps.map(p=>`<div style="padding:13px 0;border-bottom:1px solid #eadbd7;font-size:13px">${p.emoji} <b>${p.name}</b> — ${p.cat} — ₹${p.price}<button style="float:right" onclick="del(${p.id})">Delete</button></div>`).join('')||'<p>No products yet.</p>'}render();
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Unbox Love — Admin</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .hidden {
+      display: none !important;
+    }
+
+    .admin-box {
+      background: #fff;
+      border: 1px solid #eadbd7;
+      border-radius: 20px;
+      padding: 25px;
+      margin: 30px 0;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+      max-width: 600px;
+    }
+
+    .form-grid input,
+    .form-grid select,
+    .form-grid textarea {
+      padding: 13px;
+      border: 1px solid #d9c9c2;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .form-grid textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .primary {
+      cursor: pointer;
+      border: 0;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .product-row {
+      padding: 15px 0;
+      border-bottom: 1px solid #eadbd7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .product-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .product-details {
+      margin-top: 5px;
+      color: #806d70;
+      font-size: 13px;
+    }
+
+    .delete-btn {
+      border: 0;
+      background: #f7e3e0;
+      color: #8b3d3d;
+      padding: 8px 13px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .success-msg {
+      margin-top: 12px;
+      color: #4b7655;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a class="brand" href="index.html">
+    UNBOX <i>LOVE</i>
+  </a>
+
+  <nav>
+    <a href="index.html">← View Store</a>
+  </nav>
+</header>
+
+
+<main style="max-width:900px;margin:auto;padding:70px 6%">
+
+  <span class="label">STORE MANAGEMENT</span>
+
+  <h1 style="font:600 48px 'Playfair Display'">
+    Admin Panel
+  </h1>
+
+  <p style="color:#796669">
+    Add and manage products for your store.
+  </p>
+
+
+  <!-- WHATSAPP -->
+
+  <section class="admin-box">
+
+    <h2 style="font-family:'Playfair Display'">
+      WhatsApp number
+    </h2>
+
+    <p style="font-size:12px;color:#806d70">
+      Use country code + number without + or spaces.
+      Example: 919876543210
+    </p>
+
+    <div class="form-grid">
+
+      <input
+        id="wa"
+        type="text"
+        placeholder="919876543210"
+      >
+
+      <button
+        type="button"
+        class="primary"
+        onclick="saveWa()"
+      >
+        Save number
+      </button>
+
+    </div>
+
+    <div id="waMsg" class="success-msg"></div>
+
+  </section>
+
+
+  <!-- ADD PRODUCT -->
+
+  <section class="admin-box">
+
+    <h2 style="font-family:'Playfair Display'">
+      Add new product
+    </h2>
+
+    <div class="form-grid">
+
+      <input
+        id="productName"
+        type="text"
+        placeholder="Product name"
+      >
+
+
+      <select id="productCat">
+
+        <option value="Ribbon Bouquet">
+          Ribbon Bouquet
+        </option>
+
+        <option value="Handmade Gifts">
+          Handmade Gifts
+        </option>
+
+        <option value="Resin Art">
+          Resin Art
+        </option>
+
+        <option value="Gift Hamper">
+          Gift Hamper
+        </option>
+
+        <option value="Keychains">
+          Keychains
+        </option>
+
+      </select>
+
+
+      <input
+        id="productPrice"
+        type="number"
+        min="1"
+        placeholder="Price ₹"
+      >
+
+
+      <input
+        id="productEmoji"
+        type="text"
+        placeholder="Emoji e.g. 💐"
+      >
+
+
+      <textarea
+        id="productDesc"
+        placeholder="Short description"
+      ></textarea>
+
+
+      <button
+        type="button"
+        class="primary"
+        onclick="addProduct()"
+      >
+        Add Product
+      </button>
+
+    </div>
+
+    <div id="productMsg" class="success-msg"></div>
+
+
+    <!-- CURRENT PRODUCTS -->
+
+    <h2
+      style="
+        font-family:'Playfair Display';
+        margin-top:40px;
+      "
+    >
+      Current products
+    </h2>
+
+    <div id="list"></div>
+
+  </section>
+
+</main>
+
+
+<script>
+
+  /*
+    SAME PRODUCT STORAGE
+    We save to both keys so the existing
+    website/admin code can read the products.
+  */
+
+  const PRODUCT_KEY = "unboxlove_products";
+  const OLD_PRODUCT_KEY = "ul_products";
+
+
+  /* ---------------------------
+     LOAD PRODUCTS
+  --------------------------- */
+
+  function loadProducts() {
+
+    let products =
+      JSON.parse(localStorage.getItem(PRODUCT_KEY));
+
+    if (!Array.isArray(products)) {
+
+      products =
+        JSON.parse(localStorage.getItem(OLD_PRODUCT_KEY));
+
+    }
+
+    if (!Array.isArray(products)) {
+      products = [];
+    }
+
+    return products;
+  }
+
+
+  /* ---------------------------
+     SAVE PRODUCTS
+  --------------------------- */
+
+  function saveProducts(products) {
+
+    localStorage.setItem(
+      PRODUCT_KEY,
+      JSON.stringify(products)
+    );
+
+    localStorage.setItem(
+      OLD_PRODUCT_KEY,
+      JSON.stringify(products)
+    );
+  }
+
+
+  /* ---------------------------
+     WHATSAPP
+  --------------------------- */
+
+  const waInput =
+    document.getElementById("wa");
+
+  const savedWhatsApp =
+    localStorage.getItem("ul_whatsapp");
+
+  waInput.value =
+    savedWhatsApp || "919999999999";
+
+
+  function saveWa() {
+
+    const number =
+      waInput.value.replace(/\D/g, "");
+
+    if (!number) {
+
+      alert("Please enter WhatsApp number");
+
+      return;
+    }
+
+    localStorage.setItem(
+      "ul_whatsapp",
+      number
+    );
+
+    document.getElementById("waMsg").textContent =
+      "WhatsApp number saved ❤️";
+
+  }
+
+
+  /* ---------------------------
+     ADD PRODUCT
+  --------------------------- */
+
+  function addProduct() {
+
+    const name =
+      document.getElementById("productName")
+        .value
+        .trim();
+
+    const category =
+      document.getElementById("productCat")
+        .value;
+
+    const price =
+      Number(
+        document.getElementById("productPrice")
+          .value
+      );
+
+    const emoji =
+      document.getElementById("productEmoji")
+        .value
+        .trim() || "🎁";
+
+    const description =
+      document.getElementById("productDesc")
+        .value
+        .trim();
+
+
+    /* CHECK NAME */
+
+    if (!name) {
+
+      alert("Please enter product name");
+
+      document.getElementById("productName")
+        .focus();
+
+      return;
+    }
+
+
+    /* CHECK PRICE */
+
+    if (!price || price <= 0) {
+
+      alert("Please enter a valid price");
+
+      document.getElementById("productPrice")
+        .focus();
+
+      return;
+    }
+
+
+    /* CREATE PRODUCT */
+
+    const product = {
+
+      id: Date.now(),
+
+      name: name,
+
+      price: price,
+
+      cat: category,
+
+      desc: description,
+
+      emoji: emoji,
+
+      image: ""
+
+    };
+
+
+    /* LOAD EXISTING */
+
+    const products =
+      loadProducts();
+
+
+    /* ADD */
+
+    products.push(product);
+
+
+    /* SAVE */
+
+    saveProducts(products);
+
+
+    /* CLEAR FORM */
+
+    document.getElementById("productName")
+      .value = "";
+
+    document.getElementById("productPrice")
+      .value = "";
+
+    document.getElementById("productEmoji")
+      .value = "";
+
+    document.getElementById("productDesc")
+      .value = "";
+
+
+    /* MESSAGE */
+
+    document.getElementById("productMsg")
+      .textContent =
+      "Product added successfully ❤️";
+
+
+    /* SHOW PRODUCTS */
+
+    render();
+
+  }
+
+
+  /* ---------------------------
+     DELETE PRODUCT
+  --------------------------- */
+
+  function deleteProduct(id) {
+
+    const confirmDelete =
+      confirm("Delete this product?");
+
+    if (!confirmDelete) {
+      return;
+    }
+
+
+    let products =
+      loadProducts();
+
+
+    products =
+      products.filter(
+        product =>
+          String(product.id) !== String(id)
+      );
+
+
+    saveProducts(products);
+
+
+    render();
+
+
+    document.getElementById("productMsg")
+      .textContent =
+      "Product deleted.";
+  }
+
+
+  /* ---------------------------
+     SHOW PRODUCTS
+  --------------------------- */
+
+  function render() {
+
+    const list =
+      document.getElementById("list");
+
+    const products =
+      loadProducts();
+
+
+    if (!products.length) {
+
+      list.innerHTML =
+        "<p style='color:#806d70'>No products yet.</p>";
+
+      return;
+    }
+
+
+    list.innerHTML =
+      products.map(product => `
+
+        <div class="product-row">
+
+          <div class="product-info">
+
+            <div class="product-name">
+
+              ${escapeHTML(product.emoji || "🎁")}
+
+              ${escapeHTML(product.name)}
+
+            </div>
+
+            <div class="product-details">
+
+              ${escapeHTML(product.cat || "")}
+
+              &nbsp; · &nbsp;
+
+              ₹${Number(product.price || 0).toLocaleString("en-IN")}
+
+            </div>
+
+            ${
+              product.desc
+                ? `
+                  <div
+                    style="
+                      margin-top:5px;
+                      color:#8a7779;
+                      font-size:12px;
+                    "
+                  >
+                    ${escapeHTML(product.desc)}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+
+          <button
+            type="button"
+            class="delete-btn"
+            onclick="deleteProduct('${product.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      `).join("");
+
+  }
+
+
+  /* ---------------------------
+     SECURITY / HTML ESCAPE
+  --------------------------- */
+
+  function escapeHTML(value) {
+
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  }
+
+
+  /* ---------------------------
+     INITIAL LOAD
+  --------------------------- */
+
+  render();
+
+</script>
+
+</body>
+</html>
