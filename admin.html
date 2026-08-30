@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unbox Love — Admin</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header class="nav"><a class="brand" href="index.html">Unbox <span>Love</span></a><a href="index.html">View Store ↗</a></header>
+<main class="admin-wrap">
+<div id="loginBox" class="panel login"><p class="eyebrow">PRIVATE AREA</p><h1>Admin Login</h1><input id="user" placeholder="Username"><input id="pass" type="password" placeholder="Password"><button class="btn" onclick="login()">Login</button><p id="loginMsg" class="msg"></p><small>Demo login: <b>admin</b> / <b>unboxlove</b></small></div>
+<div id="dashboard" class="hidden">
+<div class="admin-top"><div><p class="eyebrow">STORE MANAGEMENT</p><h1>Products</h1></div><button class="btn" onclick="logout()">Logout</button></div>
+<form id="productForm" class="panel form"><h2 id="formTitle">Add Product</h2><input id="pname" required placeholder="Product name"><div class="row"><input id="pprice" required type="number" min="0" placeholder="Price (₹)"><select id="pcat"><option>Resin Art</option><option>Keychains</option><option>Gift Hampers</option><option>Ribbon Bouquets</option><option>Handmade Gifts</option></select></div><input id="pimage" placeholder="Image URL (optional)"><textarea id="pdesc" placeholder="Short description"></textarea><div class="row"><button class="btn" type="submit">Save Product</button><button class="btn secondary" type="button" onclick="resetForm()">Clear</button></div></form>
+<div id="adminGrid" class="admin-grid"></div></div>
+</main><script src="admin.js"></script></body></html>
