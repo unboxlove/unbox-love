@@ -1,12 +1,432 @@
-const KEY="unboxlove_products";let editing=-1;
-const defaults=[{name:"Love Resin Keychain",price:299,cat:"Keychains",desc:"A cute personalised resin keychain.",image:""},{name:"Mini Gift Hamper",price:799,cat:"Gift Hampers",desc:"A sweet little hamper for someone special.",image:""},{name:"Resin Name Art",price:699,cat:"Resin Art",desc:"Handmade resin art with a personalised touch.",image:""},{name:"Ribbon Love Bouquet",price:599,cat:"Ribbon Bouquets",desc:"A forever bouquet made with beautiful ribbons.",image:""}];
-function get(){let p=JSON.parse(localStorage.getItem(KEY));if(!p){p=defaults;save(p)}return p}function save(p){localStorage.setItem(KEY,JSON.stringify(p))}
-function login(){let u=document.querySelector("#user").value,p=document.querySelector("#pass").value;if(u==="admin"&&p==="unboxlove"){sessionStorage.admin="1";show()}else document.querySelector("#loginMsg").textContent="Wrong username or password."}
-function logout(){sessionStorage.removeItem("admin");location.reload()}function show(){document.querySelector("#loginBox").classList.add("hidden");document.querySelector("#dashboard").classList.remove("hidden");render()}
-function esc(s){return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
-function render(){let p=get();document.querySelector("#adminGrid").innerHTML=p.map((x,i)=>`<div class="admin-card"><div class="pic" ${x.image?`style="background-image:url('${x.image.replaceAll("'","%27")}')"`:""}>${x.image?"":"🎁"}</div><h3>${esc(x.name)}</h3><small>${esc(x.cat)} · ₹${Number(x.price).toLocaleString("en-IN")}</small><p>${esc(x.desc)}</p><div class="actions"><button class="edit" onclick="edit(${i})">Edit</button><button class="delete" onclick="del(${i})">Delete</button></div></div>`).join("")}
-document.querySelector("#productForm").addEventListener("submit",e=>{e.preventDefault();let p=get(),item={name:pname.value,price:Number(pprice.value),cat:pcat.value,desc:pdesc.value,image:pimage.value};if(editing<0)p.push(item);else p[editing]=item;save(p);resetForm();render()});
-function edit(i){let x=get()[i];editing=i;pname.value=x.name;pprice.value=x.price;pcat.value=x.cat;pdesc.value=x.desc||"";pimage.value=x.image||"";document.querySelector("#formTitle").textContent="Edit Product";scrollTo({top:0,behavior:"smooth"})}
-function del(i){if(confirm("Delete this product?")){let p=get();p.splice(i,1);save(p);render()}}
-function resetForm(){editing=-1;document.querySelector("#productForm").reset();document.querySelector("#formTitle").textContent="Add Product"}
-if(sessionStorage.admin==="1")show();
+const KEY = "unboxlove_products";
+
+let editing = -1;
+
+const defaults = [
+{
+name: "Love Resin Keychain",
+price: 299,
+cat: "Keychains",
+desc: "A cute personalised resin keychain.",
+image: ""
+},
+{
+name: "Mini Gift Hamper",
+price: 799,
+cat: "Gift Hampers",
+desc: "A sweet little hamper for someone special.",
+image: ""
+},
+{
+name: "Resin Name Art",
+price: 699,
+cat: "Resin Art",
+desc: "Handmade resin art with a personalised touch.",
+image: ""
+},
+{
+name: "Ribbon Love Bouquet",
+price: 599,
+cat: "Ribbon Bouquets",
+desc: "A forever bouquet made with beautiful ribbons.",
+image: ""
+}
+];
+
+/* =========================
+GET PRODUCTS
+========================= */
+
+function get() {
+
+let saved =
+localStorage.getItem(KEY);
+
+if (saved) {
+
+```
+try {
+
+  const products =
+    JSON.parse(saved);
+
+  if (
+    Array.isArray(products) &&
+    products.length > 0
+  ) {
+    return products;
+  }
+
+} catch (error) {
+
+  console.log(
+    "Product data error:",
+    error
+  );
+
+}
+```
+
+}
+
+localStorage.setItem(
+KEY,
+JSON.stringify(defaults)
+);
+
+return defaults;
+}
+
+/* =========================
+SAVE PRODUCTS
+========================= */
+
+function save(products) {
+
+localStorage.setItem(
+KEY,
+JSON.stringify(products)
+);
+
+}
+
+/* =========================
+LOGIN
+========================= */
+
+function login() {
+
+const username =
+document.querySelector("#user").value.trim();
+
+const password =
+document.querySelector("#pass").value;
+
+if (
+username === "admin" &&
+password === "unboxlove"
+) {
+
+```
+sessionStorage.admin = "1";
+
+show();
+```
+
+} else {
+
+```
+document.querySelector(
+  "#loginMsg"
+).textContent =
+  "Wrong username or password.";
+```
+
+}
+
+}
+
+/* =========================
+LOGOUT
+========================= */
+
+function logout() {
+
+sessionStorage.removeItem("admin");
+
+location.reload();
+
+}
+
+/* =========================
+SHOW DASHBOARD
+========================= */
+
+function show() {
+
+document
+.querySelector("#loginBox")
+.classList.add("hidden");
+
+document
+.querySelector("#dashboard")
+.classList.remove("hidden");
+
+render();
+
+}
+
+/* =========================
+ESCAPE TEXT
+========================= */
+
+function esc(value) {
+
+return String(value ?? "")
+.replaceAll("&", "&")
+.replaceAll("<", "<")
+.replaceAll(">", ">")
+.replaceAll('"', """);
+
+}
+
+/* =========================
+RENDER PRODUCTS
+========================= */
+
+function render() {
+
+const products = get();
+
+const grid =
+document.querySelector("#adminGrid");
+
+if (!grid) return;
+
+grid.innerHTML =
+products.map(
+(product, index) => `
+
+```
+    <div class="admin-card">
+
+      <div
+        class="pic"
+        ${
+          product.image
+            ? `style="background-image:url('${String(product.image).replaceAll("'", "%27")}')"`
+            : ""
+        }
+      >
+        ${
+          product.image
+            ? ""
+            : "🎁"
+        }
+      </div>
+
+      <h3>
+        ${esc(product.name)}
+      </h3>
+
+      <small>
+        ${esc(product.cat)}
+        ·
+        ₹${Number(product.price).toLocaleString("en-IN")}
+      </small>
+
+      <p>
+        ${esc(product.desc)}
+      </p>
+
+      <div class="actions">
+
+        <button
+          class="edit"
+          onclick="edit(${index})"
+        >
+          Edit
+        </button>
+
+        <button
+          class="delete"
+          onclick="del(${index})"
+        >
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  `
+).join("");
+```
+
+}
+
+/* =========================
+ADD / EDIT PRODUCT
+========================= */
+
+document
+.querySelector("#productForm")
+?.addEventListener(
+"submit",
+function(event) {
+
+```
+  event.preventDefault();
+
+  const products = get();
+
+  const item = {
+
+    name:
+      document
+        .querySelector("#pname")
+        .value
+        .trim(),
+
+    price:
+      Number(
+        document
+          .querySelector("#pprice")
+          .value
+      ),
+
+    cat:
+      document
+        .querySelector("#pcat")
+        .value,
+
+    desc:
+      document
+        .querySelector("#pdesc")
+        .value
+        .trim(),
+
+    image:
+      document
+        .querySelector("#pimage")
+        .value
+        .trim()
+
+  };
+
+
+  if (!item.name) {
+    alert("Please enter product name.");
+    return;
+  }
+
+  if (editing < 0) {
+
+    products.push(item);
+
+  } else {
+
+    products[editing] = item;
+
+  }
+
+
+  save(products);
+
+  resetForm();
+
+  render();
+
+}
+```
+
+);
+
+/* =========================
+EDIT
+========================= */
+
+function edit(index) {
+
+const products = get();
+
+const product = products[index];
+
+if (!product) return;
+
+editing = index;
+
+document.querySelector("#pname").value =
+product.name;
+
+document.querySelector("#pprice").value =
+product.price;
+
+document.querySelector("#pcat").value =
+product.cat;
+
+document.querySelector("#pdesc").value =
+product.desc || "";
+
+document.querySelector("#pimage").value =
+product.image || "";
+
+document.querySelector("#formTitle").textContent =
+"Edit Product";
+
+window.scrollTo({
+top: 0,
+behavior: "smooth"
+});
+
+}
+
+/* =========================
+DELETE
+========================= */
+
+function del(index) {
+
+if (
+!confirm("Delete this product?")
+) {
+return;
+}
+
+const products = get();
+
+products.splice(index, 1);
+
+/*
+If every product is deleted,
+restore the original 4 products.
+*/
+
+if (products.length === 0) {
+
+```
+save(defaults);
+```
+
+} else {
+
+```
+save(products);
+```
+
+}
+
+render();
+
+}
+
+/* =========================
+RESET FORM
+========================= */
+
+function resetForm() {
+
+editing = -1;
+
+document
+.querySelector("#productForm")
+.reset();
+
+document
+.querySelector("#formTitle")
+.textContent =
+"Add Product";
+
+}
+
+/* =========================
+AUTO LOGIN
+========================= */
+
+if (
+sessionStorage.admin === "1"
+) {
+
+show();
+
+}
