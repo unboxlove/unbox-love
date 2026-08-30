@@ -47,7 +47,7 @@ const WHATSAPP_NUMBER = "919043094724";
 function getProducts() {
   let p = JSON.parse(localStorage.getItem(KEY));
 
-  if (!p) {
+  if (!Array.isArray(p) || p.length === 0) {
     p = defaults;
     localStorage.setItem(KEY, JSON.stringify(p));
   }
